@@ -5,7 +5,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import id.go.bintankab.bapelitbang.simonev.R;
-import id.go.bintankab.bapelitbang.simonev.repository.WSDashboardRepo;
+import id.go.bintankab.bapelitbang.simonev.repository.WSSingletonRepo;
 
 public class DashboardFrontActivity extends AppCompatActivity {
 
@@ -14,6 +14,7 @@ public class DashboardFrontActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard_front);
 
-        WSDashboardRepo dashboardRepo = new WSDashboardRepo(this.getApplicationContext());
+        WSSingletonRepo dashboard = new WSSingletonRepo(this.getApplicationContext());
+
     }
 }
