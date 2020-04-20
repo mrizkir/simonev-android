@@ -6,6 +6,7 @@ import android.util.Log;
 import android.util.LruCache;
 import id.go.bintankab.bapelitbang.simonev.R;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -18,6 +19,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * class untuk singleton app running di seluruh aplikasi
@@ -76,8 +78,7 @@ public class WSSingletonRepo {
     }
 
 
-    public void requestMethodPost(String path, JSONObject parameters,JSONObject headers,final WSCallback callback) {
-
+    public void requestMethodPost(String path, JSONObject parameters, final String token, final WSCallback callback) {
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, apiURL + path, parameters, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -99,10 +100,23 @@ public class WSSingletonRepo {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-//                Log.i(TAG,jsonError.toString());
             }
-        });
-        this.addToRequestQueue(request);
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                if (token == null)
+                {
+                    return super.getHeaders();
+                }
+                else
+                {
+                    HashMap<String,String> headers = new HashMap<>();
+                    headers.put("Authorization","Bearer "+token);
 
+                    return headers;
+                }
+            }
+        };
+        this.addToRequestQueue(request);
     }
 }

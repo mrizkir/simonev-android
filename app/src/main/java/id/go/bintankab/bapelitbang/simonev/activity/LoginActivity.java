@@ -30,6 +30,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button btnLogin;
 
     private WSSingletonRepo repo;
+    public Session session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,27 +39,36 @@ public class LoginActivity extends AppCompatActivity {
 
         etUsername = (EditText)findViewById(R.id.etUserame);
         etPassword = (EditText)findViewById(R.id.etPassword);
+        btnLogin = (Button)findViewById(R.id.btnLogin);
 
         repo = new WSSingletonRepo(this.getApplicationContext());
     }
 
     public void btnLoginClicked (View view) {
+        btnLogin.setEnabled(false);
         JSONObject parameters = new JSONObject();
         try {
             parameters.put("username",etUsername.getText().toString());
             parameters.put("password",etPassword.getText().toString());
+
+            this.session = new Session(this.getApplicationContext());
+
             repo.requestMethodPost("/auth/login", parameters, null, new WSCallback() {
                 @Override
                 public void OnSuccessResponse(JSONObject result) {
-                    startActivity(new Intent(LoginActivity.this,DashboardAdminActivity.class));
+                    session.setUser(result.toString());
+//                    startActivity(new Intent(LoginActivity.this,DashboardAdminActivity.class));
                 }
                 @Override
                 public void OnErrorResponse(JSONObject error) throws JSONException {
                     Toast.makeText(LoginActivity.this,error.getString("message"),Toast.LENGTH_LONG).show();
                 }
             });
+            Log.i(TAG,session.getUser());
         } catch (JSONException e) {
             e.printStackTrace();
+        }finally {
+            btnLogin.setEnabled(true);
         }
     }
 
