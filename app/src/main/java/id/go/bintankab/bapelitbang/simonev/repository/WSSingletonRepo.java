@@ -14,6 +14,7 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -38,8 +39,6 @@ public class WSSingletonRepo {
     public WSSingletonRepo(Context context) {
         ctx = context;
         apiURL = ctx.getString(R.string.api_url);
-
-        Log.i("WSSingletonRepo",apiURL);
 
         requestQueue = getRequestQueue();
 
@@ -87,7 +86,20 @@ public class WSSingletonRepo {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e(TAG,error.getMessage());
+                JSONObject jsonError = new JSONObject();
+                try {
+                    switch(error.networkResponse.statusCode)
+                    {
+                        case 401:
+                            jsonError.put("code",401);
+                            jsonError.put("message","Token sudah expire atau username atau password salah");
+                        break;
+                    }
+                    callback.OnErrorResponse(jsonError);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+//                Log.i(TAG,jsonError.toString());
             }
         });
         this.addToRequestQueue(request);

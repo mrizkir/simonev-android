@@ -2,4 +2,9 @@
     <string name="app_name">SIMONEV</string>
     <string name="app_url">https://api.bintankab.go.id</string>
     <string name="api_url">https://api.bintankab.go.id/v1</string>
+
+    <string name="stringBtnlogin">LOGIN</string>
+    <string name="stringEtUsername">USERNAME:</string>
+    <string name="stringEtPassword">PASSWORD:</string>
+
 </resources>
